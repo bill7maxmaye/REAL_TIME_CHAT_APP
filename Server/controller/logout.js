@@ -1,3 +1,4 @@
+//this function is
 async function logout(request, response) {
   try {
     const cookieOptions = {
