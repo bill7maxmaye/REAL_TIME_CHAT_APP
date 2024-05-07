@@ -1,8 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-
 const connectDB = require("./config/connectDB");
+const router = require("./routes/index");
 
 const app = express();
 app.use(
@@ -20,6 +20,9 @@ app.get("/", (req, res) => {
   });
   console.log(req);
 });
+
+//define your api endpoints here
+app.use("/api", router);
 
 //if connected to the mongodb database then start the server
 connectDB().then(() => {
