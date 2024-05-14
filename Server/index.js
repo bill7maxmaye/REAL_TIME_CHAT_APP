@@ -16,7 +16,7 @@ app.use(
 app.use(express.json());
 app.use(cookiesParser());
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8000;
 
 app.get("/", (req, res) => {
   res.json({
