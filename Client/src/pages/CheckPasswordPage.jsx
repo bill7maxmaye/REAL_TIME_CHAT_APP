@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react";
-//import { IoClose } from "react-icons/io5";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-//import uploadFile from "../helpers/uploadFile";
 import axios from "axios";
 import toast from "react-hot-toast";
-//import { PiUserCircle } from "react-icons/pi";
 import Avatar from "../components/Avatar";
 import { useDispatch } from "react-redux";
-import { setToken, setUser } from "../redux/userSlice";
+import { setToken } from "../redux/userSlice";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
 
 const CheckPasswordPage = () => {
   const [data, setData] = useState({
     password: "",
     userId: "",
   });
+  const [showPassword, setShowPassword] = useState(false); // State to manage password visibility
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
 
+  //this line makes  sure the checkpassword page not get rendered if the user name is not found
   useEffect(() => {
     if (!location?.state?.name) {
       navigate("/email");
@@ -68,13 +68,14 @@ const CheckPasswordPage = () => {
     }
   };
 
+  const toggleShowPassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+
   return (
     <div className="mt-5">
-      <div className="bg-white w-full max-w-md  rounded overflow-hidden p-4 mx-auto">
+      <div className="bg-white w-full max-w-md rounded overflow-hidden p-4 mx-auto">
         <div className="w-fit mx-auto mb-2 flex justify-center items-center flex-col gap-y-10">
-          {/* <PiUserCircle
-                  size={80}
-                /> */}
           <Avatar
             width={70}
             height={70}
@@ -87,10 +88,10 @@ const CheckPasswordPage = () => {
         </div>
 
         <form className="grid gap-4 mt-3" onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1 relative">
             <label htmlFor="password">Password </label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"} // Toggle input type based on state
               id="password"
               name="password"
               placeholder="enter your password"
@@ -99,9 +100,16 @@ const CheckPasswordPage = () => {
               onChange={handleOnChange}
               required
             />
+            <button
+              type="button"
+              onClick={toggleShowPassword}
+              className="absolute right-2   top-9 text-primary "
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
           </div>
 
-          <button className="bg-primary text-lg  px-4 py-1 hover:bg-secondary rounded mt-2 font-bold text-white leading-relaxed tracking-wide">
+          <button className="bg-primary text-lg px-4 py-1 hover:bg-secondary rounded mt-2 font-bold text-white leading-relaxed tracking-wide">
             Login
           </button>
         </form>

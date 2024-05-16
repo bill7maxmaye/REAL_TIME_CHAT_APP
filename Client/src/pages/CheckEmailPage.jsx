@@ -8,7 +8,17 @@ const CheckEmailPage = () => {
   const [data, setData] = useState({
     email: "",
   });
+  const [emailError, setEmailError] = useState(""); // State to manage email error
   const navigate = useNavigate();
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return "Please enter a valid email address.";
+    } else {
+      return "";
+    }
+  };
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -24,6 +34,14 @@ const CheckEmailPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
+
+    const error = validateEmail(data.email);
+    setEmailError(error);
+
+    if (error) {
+      toast.error(error);
+      return;
+    }
 
     const URL = `${import.meta.env.VITE_BACKEND_URL}/api/email`;
 
@@ -48,7 +66,7 @@ const CheckEmailPage = () => {
 
   return (
     <div className="mt-5">
-      <div className="bg-white w-full max-w-md  rounded overflow-hidden p-4 mx-auto">
+      <div className="bg-white w-full max-w-md rounded overflow-hidden p-4 mx-auto">
         <div className="w-fit mx-auto mb-2">
           <PiUserCircle size={80} className="text-primary" />
         </div>
@@ -57,7 +75,7 @@ const CheckEmailPage = () => {
 
         <form className="grid gap-4 mt-3" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-1">
-            <label htmlFor="email">Email </label>
+            <label htmlFor="email">Email</label>
             <input
               type="email"
               id="email"
@@ -68,15 +86,18 @@ const CheckEmailPage = () => {
               onChange={handleOnChange}
               required
             />
+            {emailError && (
+              <p className="text-red-500 text-sm mt-1">{emailError}</p>
+            )}
           </div>
 
-          <button className="bg-primary text-lg  px-4 py-1 hover:bg-secondary rounded mt-2 font-bold text-white leading-relaxed tracking-wide">
+          <button className="bg-primary text-lg px-4 py-1 hover:bg-secondary rounded mt-2 font-bold text-white leading-relaxed tracking-wide">
             Let's Go
           </button>
         </form>
 
         <p className="my-3 text-center">
-          New User ?{" "}
+          New User?{" "}
           <Link to={"/register"} className="hover:text-primary font-semibold">
             Register
           </Link>

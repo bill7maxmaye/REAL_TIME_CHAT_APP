@@ -8,6 +8,7 @@ const Avatar = ({ userId, name, imageUrl, width, height }) => {
   let avatarName = "";
 
   if (name) {
+    //
     const splitName = name?.split(" ");
 
     if (splitName.length > 1) {
@@ -29,6 +30,7 @@ const Avatar = ({ userId, name, imageUrl, width, height }) => {
     "bg-blue-200",
   ];
 
+  //this line is used
   const randomNumber = Math.floor(Math.random() * 9);
 
   const isOnline = onlineUser.includes(userId);
