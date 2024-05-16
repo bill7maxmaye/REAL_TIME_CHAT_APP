@@ -57,7 +57,7 @@ const CheckEmailPage = () => {
 
         <form className="grid gap-4 mt-3" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-1">
-            <label htmlFor="email">Email :</label>
+            <label htmlFor="email">Email </label>
             <input
               type="email"
               id="email"
