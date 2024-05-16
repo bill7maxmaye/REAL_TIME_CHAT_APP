@@ -36,6 +36,7 @@ const CheckEmailPage = () => {
         setData({
           email: "",
         });
+
         navigate("/password", {
           state: response?.data?.data,
         });
