@@ -4,7 +4,7 @@ require("dotenv").config();
 const connectDB = require("./config/connectDB");
 const router = require("./routes/index");
 const cookiesParser = require("cookie-parser");
-
+const { app, server } = require("./socket/index");
 const app = express();
 
 app.use(
@@ -30,7 +30,7 @@ app.use("/api", router);
 
 //if connected to the mongodb database then start the server
 connectDB().then(() => {
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
 });
