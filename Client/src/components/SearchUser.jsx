@@ -43,7 +43,7 @@ const SearchUser = ({ onClose }) => {
             onChange={(e) => setSearch(e.target.value)}
             value={search}
           />
-          <div className="h-14 w-14 flex justify-center items-center">
+          <div className="h-14 w-14 bg-red-100 flex justify-center items-center">
             <IoSearchOutline size={25} />
           </div>
         </div>
