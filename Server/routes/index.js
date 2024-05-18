@@ -5,6 +5,7 @@ const checkPassword = require("../controller/checkPassword");
 const userDetails = require("../controller/userDetails");
 const logout = require("../controller/logout");
 const updateUserDetails = require("../controller/updateUserDetails");
+const searchUser = require("../controller/searchUser");
 
 const router = express.Router();
 
