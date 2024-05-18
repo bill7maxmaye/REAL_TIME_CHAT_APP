@@ -87,19 +87,19 @@ const EditUserDetails = ({ onClose, user }) => {
 
         <form className="grid gap-3 mt-3" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-1">
-            <label htmlFor="name">Name:</label>
+            <label htmlFor="name">Name</label>
             <input
               type="text"
               name="name"
               id="name"
               value={data.name}
               onChange={handleOnChange}
-              className="w-full py-1 px-2 focus:outline-primary border-0.5"
+              className="w-full py-1 px-2 focus:outline-primary border border-cyan-200"
             />
           </div>
 
           <div>
-            <div>Photo:</div>
+            <div>Photo</div>
             <div className="my-1 flex items-center gap-4">
               <Avatar
                 width={40}
