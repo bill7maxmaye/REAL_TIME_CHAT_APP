@@ -1,39 +1,37 @@
-const { isAsyncFunction } = require("util/types");
+const crypto = require("crypto");
 const UserModel = require("../models/UserModel");
+import sendEmail from "../helpers/sendEmail";
+//const jwt = require("jsonwebtoken");
 
 async function forgotPassword(request, response) {
+  const { email } = request.body;
   try {
-    const { email } = req.body;
     const user = await UserModel.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      return response.status(400).json({ message: "User not found" });
     }
 
-    user.generatePasswordReset();
+    const resetToken = crypto.randomBytes(20).toString("hex");
+    user.resetToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+    user.resetTokenExpire = Date.now() + 10 * 60 * 1000; //10 min
     await user.save();
 
-    const transporter = nodemailer.createTransport({
-      service: "Gmail",
-      auth: {
-        user: "your-email@gmail.com",
-        pass: "your-email-password",
-      },
-    });
+    const resetUrl = `${process.env.FRONTEND_URL}/resetpasssword/${resetToken}`;
+    const message = `<h1>You have requested a password reset</h1>
+    <p>Please Click On The Following Link To Reset Your Password</p>
+    <a href=${resetUrl} clicktracking=off> ${resetUrl}</a>`;
 
-    const mailOptions = {
+    await sendEmail({
       to: user.email,
-      from: "your-email@gmail.com",
-      subject: "Password Reset",
-      text: `Please click on the following link, or paste it into your browser to complete the process:\n\nhttp://${req.headers.host}/reset-password/${user.resetPasswordToken}\n\nIf you did not request this, please ignore this email and your password will remain unchanged.\n`,
-    };
-
-    transporter.sendMail(mailOptions, (err, response) => {
-      if (err) {
-        return res.status(500).json({ message: "Error sending email" });
-      }
-      res.status(200).json({ message: "Reset password email sent" });
+      subject: "Password Reset Request",
+      text: message,
     });
+
+    response.status(200).json({ message: "Email Sent" });
   } catch (error) {
     return response.status(500).json({
       message: error.message || error,
