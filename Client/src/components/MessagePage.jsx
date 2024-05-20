@@ -13,12 +13,18 @@ import Loading from "./Loading";
 import backgroundImage from "../assets/wallapaper.jpeg";
 import { IoMdSend } from "react-icons/io";
 import moment from "moment";
+import { useSocket } from "../socketContext/SocketContext";
 
 const MessagePage = () => {
   const params = useParams();
-  const socketConnection = useSelector(
-    (state) => state?.user?.socketConnection
-  );
+
+  const socketConnection = useSocket();
+
+  //previous code that get socketConnection from the redux store
+  // const socketConnection = useSelector(
+  //   (state) => state?.user?.socketConnection
+  // );
+
   const user = useSelector((state) => state?.user);
   const [dataUser, setDataUser] = useState({
     name: "",
@@ -175,14 +181,20 @@ const MessagePage = () => {
               {dataUser.online ? (
                 <span className="text-primary">online</span>
               ) : (
-                <span className="text-slate-400">offline</span>
+                <span className="text-slate-400">last seen recently</span>
               )}
             </p>
           </div>
         </div>
 
         <div>
-          <button className="cursor-pointer hover:text-primary">
+          <button
+            //added this onclick feature to see the id
+            onClick={() => {
+              alert("This is my socket id" + " " + user._id);
+            }}
+            className="cursor-pointer hover:text-primary"
+          >
             <HiDotsVertical />
           </button>
         </div>

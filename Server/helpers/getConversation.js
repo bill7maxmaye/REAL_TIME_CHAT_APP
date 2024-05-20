@@ -2,6 +2,7 @@ const { ConversationModel } = require("../models/ConversationModel");
 
 const getConversation = async (currentUserId) => {
   if (currentUserId) {
+    //Query: It queries the ConversationModel to find all conversations where the current user is either the sender or the receiver.
     const currentUserConversation = await ConversationModel.find({
       $or: [{ sender: currentUserId }, { receiver: currentUserId }],
     })

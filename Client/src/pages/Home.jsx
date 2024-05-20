@@ -12,7 +12,10 @@ import Sidebar from "../components/Sidebar";
 import logo from "../assets/logo.png";
 import io from "socket.io-client";
 
+import { useSocket } from "../socketContext/SocketContext";
+
 const Home = () => {
+  const socketConnection = useSocket();
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -44,24 +47,43 @@ const Home = () => {
   }, []);
 
   /***socket connection */
+  //socket connection between the client and and the server is a listen an event and emit an event based relation
+  //there are times when a client listens to an event emitted by the server using (socketConnection.on) and times it emits an event uisng(socketConnection.emit). so each respond accordigly to specific event
+
   useEffect(() => {
-    const socketConnection = io(`${import.meta.env.VITE_BACKEND_URL}`, {
-      auth: {
-        token: localStorage.getItem("token"),
-      },
+    // const socketConnection = io(`${import.meta.env.VITE_BACKEND_URL}`, {
+    //   auth: {
+    //     token: localStorage.getItem("token"),
+    //   },
+    // });
+    if (!socketConnection) return;
+
+    socketConnection.on("connect", () => {
+      console.log("Socket connected");
+      dispatch(setSocketConnection(true));
     });
+
+    socketConnection.on("disconnect", () => {
+      dispatch(setSocketConnection(false));
+    });
+
+    //Once connected to the server, the client listens for an event called "onlineUser" from the server.
+    //on the server side "onlineUser" event emits
 
     socketConnection.on("onlineUser", (data) => {
       console.log(data);
       dispatch(setOnlineUser(data));
     });
 
-    dispatch(setSocketConnection(socketConnection));
+    //this socket connection is use by different components like message component when it wants to emit message to the server so it needs to be globally available, thats is why it is saved in the store
+    dispatch(setSocketConnection(true));
 
     return () => {
       socketConnection.disconnect();
     };
   }, []);
+
+  console.log("socccc", user.socketConnection);
 
   const basePath = location.pathname === "/";
   return (

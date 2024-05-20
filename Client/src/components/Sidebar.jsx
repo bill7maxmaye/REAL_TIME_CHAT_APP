@@ -6,21 +6,28 @@ import { BiLogOut } from "react-icons/bi";
 import Avatar from "./Avatar";
 import { useDispatch, useSelector } from "react-redux";
 import EditUserDetails from "./EditUserDetails";
-import Divider from "./Divider";
+//import Divider from "./Divider";
 import { FiArrowUpLeft } from "react-icons/fi";
 import SearchUser from "./SearchUser";
 import { FaImage } from "react-icons/fa6";
 import { FaVideo } from "react-icons/fa6";
 import { logout } from "../redux/userSlice";
 
+import { useSocket } from "../socketContext/SocketContext";
+
 const Sidebar = () => {
+  const socketConnection = useSocket();
   const user = useSelector((state) => state?.user);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [allUser, setAllUser] = useState([]);
   const [openSearchUser, setOpenSearchUser] = useState(false);
-  const socketConnection = useSelector(
-    (state) => state?.user?.socketConnection
-  );
+
+  // previous code importing the sockectConnection from the redux
+
+  // const socketConnection = useSelector(
+  //   (state) => state?.user?.socketConnection
+  // );
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -138,6 +145,8 @@ const Sidebar = () => {
                 key={conv?._id}
                 className="flex items-center gap-2 py-3 px-2 border border-transparent hover:border-primary rounded hover:bg-slate-100 cursor-pointer"
               >
+                {/* sidebar name section */}
+
                 <div>
                   <Avatar
                     imageUrl={conv?.userDetails?.profile_pic}
@@ -146,6 +155,9 @@ const Sidebar = () => {
                     height={40}
                   />
                 </div>
+
+                {/* //sidebar name section */}
+
                 <div>
                   <h3 className="text-ellipsis line-clamp-1 font-semibold text-base">
                     {conv?.userDetails?.name}
