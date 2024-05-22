@@ -1,7 +1,7 @@
-const crypto = require("crypto");
+//const crypto = require("crypto");
 const UserModel = require("../models/UserModel");
-import sendEmail from "../helpers/sendEmail";
-//const jwt = require("jsonwebtoken");
+const sendEmail = require("../helpers/sendEmail");
+const jwt = require("jsonwebtoken");
 
 async function forgotPassword(request, response) {
   const { email } = request.body;
@@ -12,15 +12,25 @@ async function forgotPassword(request, response) {
       return response.status(400).json({ message: "User not found" });
     }
 
-    const resetToken = crypto.randomBytes(20).toString("hex");
-    user.resetToken = crypto
-      .createHash("sha256")
-      .update(resetToken)
-      .digest("hex");
+    //const resetToken = crypto.randomBytes(20).toString("hex");
+
+    // user.resetToken = crypto
+    //   .createHash("sha256")
+    //   .update(resetToken)
+    //   .digest("hex");
+
+    const resetToken = jwt.sign(
+      { email: user.email, id: user._id },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: "1d",
+      }
+    );
+    user.resetToken = resetToken;
     user.resetTokenExpire = Date.now() + 10 * 60 * 1000; //10 min
     await user.save();
 
-    const resetUrl = `${process.env.FRONTEND_URL}/resetpasssword/${resetToken}`;
+    const resetUrl = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`;
     const message = `<h1>You have requested a password reset</h1>
     <p>Please Click On The Following Link To Reset Your Password</p>
     <a href=${resetUrl} clicktracking=off> ${resetUrl}</a>`;

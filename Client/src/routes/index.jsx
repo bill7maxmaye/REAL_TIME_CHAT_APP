@@ -7,6 +7,7 @@ import Home from "../pages/Home";
 import MessagePage from "../components/MessagePage";
 import AuthLayouts from "../layout";
 import Forgotpassword from "../pages/Forgotpassword";
+import ResetPassword from "../pages/ResetPassword";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,14 @@ const router = createBrowserRouter([
         element: (
           <AuthLayouts>
             <Forgotpassword />
+          </AuthLayouts>
+        ),
+      },
+      {
+        path: "resetpassword/:resetToken", // Correct spelling
+        element: (
+          <AuthLayouts>
+            <ResetPassword />
           </AuthLayouts>
         ),
       },
