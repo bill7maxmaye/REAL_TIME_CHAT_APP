@@ -39,10 +39,11 @@ const CheckPasswordPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setLoading(true);
+
     const URL = `${import.meta.env.VITE_BACKEND_URL}/api/password`;
 
     try {
+      setLoading(true);
       const response = await axios({
         method: "post",
         url: URL,

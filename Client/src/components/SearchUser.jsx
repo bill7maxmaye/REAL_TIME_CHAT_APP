@@ -22,6 +22,7 @@ const SearchUser = ({ onClose }) => {
 
       setSearchUser(response.data.data);
     } catch (error) {
+      setLoading(false);
       toast.error(error?.response?.data?.message);
     }
   };
@@ -43,7 +44,7 @@ const SearchUser = ({ onClose }) => {
             onChange={(e) => setSearch(e.target.value)}
             value={search}
           />
-          <div className="h-14 w-14 bg-cyan-200 flex justify-center items-center">
+          <div className="h-14 w-14 bg-primary text-white flex justify-center items-center">
             <IoSearchOutline size={25} />
           </div>
         </div>

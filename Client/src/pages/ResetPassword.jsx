@@ -21,12 +21,13 @@ const ResetPassword = () => {
       toast.error("Passwords do not match");
       return;
     }
-    setLoading(true);
+
     const URL = `${
       import.meta.env.VITE_BACKEND_URL
     }/api/resetpassword/${resetToken}`;
 
     try {
+      setLoading(true);
       const response = await axios.put(URL, { password });
       setLoading(false);
       toast.success(response.data.message);
