@@ -3,11 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { PiUserCircle } from "react-icons/pi";
+import { DotLoader } from "react-spinners";
 
 const CheckEmailPage = () => {
   const [data, setData] = useState({
     email: "",
   });
+  const [loading, setLoading] = useState(false);
   const [emailError, setEmailError] = useState(""); // State to manage email error
   const navigate = useNavigate();
 
@@ -42,12 +44,12 @@ const CheckEmailPage = () => {
       toast.error(error);
       return;
     }
-
+    setLoading(true);
     const URL = `${import.meta.env.VITE_BACKEND_URL}/api/email`;
 
     try {
       const response = await axios.post(URL, data);
-
+      setLoading(false);
       toast.success(response.data.message);
 
       if (response.data.success) {
@@ -60,15 +62,21 @@ const CheckEmailPage = () => {
         });
       }
     } catch (error) {
+      setLoading(false);
       toast.error(error?.response?.data?.message);
     }
   };
 
   return (
-    <div className="mt-5">
+    <div className="mt-5 ">
       <div className="bg-white w-full max-w-md rounded overflow-hidden p-4 mx-auto">
         <div className="w-fit mx-auto mb-2">
           <PiUserCircle size={80} className="text-primary" />
+        </div>
+
+        {/* //Spinner component */}
+        <div className="mt-3 flex items-center justify-center">
+          {loading ? <DotLoader className="" color="#00adb5" size={50} /> : ""}
         </div>
 
         <h3>Welcome to Chat app!</h3>
@@ -80,7 +88,7 @@ const CheckEmailPage = () => {
               type="email"
               id="email"
               name="email"
-              placeholder="enter your email"
+              placeholder="Enter your email"
               className="bg-slate-100 px-2 py-1 focus:outline-primary"
               value={data.email}
               onChange={handleOnChange}
@@ -90,6 +98,7 @@ const CheckEmailPage = () => {
               <p className="text-red-500 text-sm mt-1">{emailError}</p>
             )}
           </div>
+          {/* spinner component */}
 
           <button className="bg-primary text-lg px-4 py-1 hover:bg-secondary rounded mt-2 font-bold text-white leading-relaxed tracking-wide">
             Let's Go

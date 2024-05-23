@@ -6,12 +6,13 @@ import Avatar from "../components/Avatar";
 import { useDispatch } from "react-redux";
 import { setToken } from "../redux/userSlice";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
-
+import { DotLoader } from "react-spinners";
 const CheckPasswordPage = () => {
   const [data, setData] = useState({
     password: "",
     userId: "",
   });
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // State to manage password visibility
   const navigate = useNavigate();
   const location = useLocation();
@@ -38,7 +39,7 @@ const CheckPasswordPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-
+    setLoading(true);
     const URL = `${import.meta.env.VITE_BACKEND_URL}/api/password`;
 
     try {
@@ -51,7 +52,7 @@ const CheckPasswordPage = () => {
         },
         withCredentials: true,
       });
-
+      setLoading(false);
       toast.success(response.data.message);
 
       if (response.data.success) {
@@ -64,6 +65,7 @@ const CheckPasswordPage = () => {
         navigate("/");
       }
     } catch (error) {
+      setLoading(false);
       toast.error(error?.response?.data?.message);
     }
   };
@@ -85,6 +87,11 @@ const CheckPasswordPage = () => {
           <h2 className="font-semibold text-lg mt-1">
             {location?.state?.name}
           </h2>
+        </div>
+
+        {/* //Spinner component */}
+        <div className="mt-3 flex items-center justify-center">
+          {loading ? <DotLoader className="" color="#00adb5" size={50} /> : ""}
         </div>
 
         <form className="grid gap-4 mt-3" onSubmit={handleSubmit}>

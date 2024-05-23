@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import uploadFile from "../helpers/uploadFile";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { DotLoader } from "react-spinners";
 
 const RegisterPage = () => {
   const [data, setData] = useState({
@@ -12,6 +13,7 @@ const RegisterPage = () => {
     password: "",
     profile_pic: "",
   });
+  const [loading, setLoading] = useState(false);
   const [uploadPhoto, setUploadPhoto] = useState("");
   const navigate = useNavigate();
 
@@ -49,11 +51,12 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-
+    setLoading(true);
     //const URL = `${process.env.REACT_APP_BACKEND_URL}/api/register`;
     const URL = `${import.meta.env.VITE_BACKEND_URL}/api/register`;
     try {
       const response = await axios.post(URL, data);
+      setLoading(false);
       console.log("response", response);
 
       toast.success(response.data.message);
@@ -69,6 +72,7 @@ const RegisterPage = () => {
         navigate("/email");
       }
     } catch (error) {
+      setLoading(false);
       toast.error(error?.response?.data?.message);
     }
     console.log("data", data);
@@ -78,6 +82,10 @@ const RegisterPage = () => {
     <div className="mt-5">
       <div className="bg-white w-full max-w-md  rounded overflow-hidden p-4 mx-auto">
         <h3>Welcome to Chat app!</h3>
+        {/* //Spinner component */}
+        <div className="mt-3 flex items-center justify-center">
+          {loading ? <DotLoader className="" color="#00adb5" size={50} /> : ""}
+        </div>
 
         <form className="grid gap-4 mt-5" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-1">
@@ -155,7 +163,6 @@ const RegisterPage = () => {
             Register
           </button>
         </form>
-
         <p className="my-3 text-center">
           Already have account ?{" "}
           <Link to={"/email"} className="hover:text-primary font-semibold">
