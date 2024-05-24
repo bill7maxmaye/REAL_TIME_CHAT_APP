@@ -30,9 +30,9 @@ const RegisterPage = () => {
 
   const handleUploadPhoto = async (e) => {
     const file = e.target.files[0];
-
+    setLoading(true);
     const uploadPhoto = await uploadFile(file);
-
+    setLoading(false);
     setUploadPhoto(file);
 
     setData((preve) => {
