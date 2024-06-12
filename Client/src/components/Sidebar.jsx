@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { IoChatbubbleEllipses } from "react-icons/io5";
 import { FaUserPlus } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -33,12 +33,16 @@ const Sidebar = () => {
 
   useEffect(() => {
     if (socketConnection) {
+      console.log(user);
       socketConnection.emit("sidebar", user._id);
+      socketConnection.on("error", (error) => {
+        console.error("Socket error:", error);
+      });
 
       socketConnection.on("conversation", (data) => {
-        console.log("conversation", data);
+        console.log("conversations", data);
 
-        const conversationUserData = data.map((conversationUser, index) => {
+        const conversationUserData = data.map((conversationUser) => {
           if (
             conversationUser?.sender?._id === conversationUser?.receiver?._id
           ) {
@@ -58,8 +62,9 @@ const Sidebar = () => {
             };
           }
         });
-
+        console.log(conversationUserData);
         setAllUser(conversationUserData);
+        console.log(allUser);
       });
     }
   }, [socketConnection, user]);
@@ -138,7 +143,7 @@ const Sidebar = () => {
             </div>
           )}
 
-          {allUser.map((conv, index) => {
+          {allUser.map((conv) => {
             return (
               <NavLink
                 to={"/" + conv?.userDetails?._id}

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable react/prop-types */
+import { useEffect, useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import Loading from "./Loading";
 import UserSearchCard from "./UserSearchCard";
@@ -57,14 +58,14 @@ const SearchUser = ({ onClose }) => {
           )}
 
           {loading && (
-            <p>
+            <div>
               <Loading />
-            </p>
+            </div>
           )}
 
           {searchUser.length !== 0 &&
             !loading &&
-            searchUser.map((user, index) => {
+            searchUser.map((user) => {
               return (
                 <UserSearchCard key={user._id} user={user} onClose={onClose} />
               );

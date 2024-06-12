@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -10,7 +10,7 @@ import {
 } from "../redux/userSlice";
 import Sidebar from "../components/Sidebar";
 import logo from "../assets/logo.png";
-import io from "socket.io-client";
+//import io from "socket.io-client";
 
 import { useSocket } from "../socketContext/SocketContext";
 
@@ -36,7 +36,7 @@ const Home = () => {
         dispatch(logout());
         navigate("/email");
       }
-      console.log("current user Details", response);
+      console.log("Current user Details", response);
     } catch (error) {
       console.log("error", error);
     }
@@ -58,7 +58,7 @@ const Home = () => {
     // });
     if (!socketConnection) return;
 
-    socketConnection.on("connect", () => {
+    socketConnection.on("connection", () => {
       console.log("Socket connected");
       dispatch(setSocketConnection(true));
     });
@@ -83,7 +83,7 @@ const Home = () => {
     };
   }, []);
 
-  console.log("socccc", user.socketConnection);
+  console.log("User socket connection status ===", user.socketConnection);
 
   const basePath = location.pathname === "/";
   return (

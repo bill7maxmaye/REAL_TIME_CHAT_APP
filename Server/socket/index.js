@@ -24,11 +24,17 @@ const io = new Server(server, {
  * socket running at http://localhost:5000/
  */
 
+//in this index.js real time related codes are written  here like sending message from one user to the other(since our app is real time chat app). this real time related codes are all event driven. But on the controller folder non real time related functionalities of the server are handled(code of non realtime are handled there) like loging in
+
+//In the provided server-side code, the event-driven code using Socket.io handles real-time communication between clients and the server. This typically involves actions like establishing connections, receiving and sending messages, managing user online status, and handling disconnections.
+
+// On the other hand, the controller folder likely contains logic for handling HTTP requests and responses, which are not necessarily real-time and are usually initiated by client actions such as submitting a form or making an API call.
+
 //online user
 const onlineUser = new Set();
 
 io.on("connection", async (socket) => {
-  console.log("Connected User ", socket.id);
+  console.log("Connected User with soket id ==== ", socket.id);
   //below we access a piece of data(specifically in this case the token) that was sent by the client during the initial handshake process of establishing a WebSocket connection using socket.io
 
   const token = socket.handshake.auth.token;
@@ -64,10 +70,11 @@ io.on("connection", async (socket) => {
 
     io.emit("onlineUser", Array.from(onlineUser));
 
-    //the socket prifix implies for each socket connection to the server
+    //the socket prifix implies for each socket connection to the server(in simple terms it is saying when someone open their app and get connected to this server do this based on their the event they send to me or do this based on the event i emit(send)to them(the ones connected to me(the server)) )
     //socket.on ======= means listen to an event from the client with specific custom name
     //socket.emit ====== means emit an event to the client with specific name
 
+    //i am listening to message-page event from each user connecting to me. i am expecting u to send me the userId
     socket.on("message-page", async (userId) => {
       console.log("userId", userId);
       const userDetails = await UserModel.findById(userId).select("-password");
@@ -82,13 +89,18 @@ io.on("connection", async (socket) => {
       socket.emit("message-user", payload);
 
       //get previous message
+
+      //Imagine you have a chat application, and you want to load the conversation between the logged-in user and another user. This code helps you fetch that conversation from the database, including all the messages in that conversation, and makes sure you get the latest conversation first.
+
       const getConversationMessage = await ConversationModel.findOne({
         $or: [
           { sender: user?._id, receiver: userId },
           { sender: userId, receiver: user?._id },
         ],
       })
+        // .populate("messages") tells Mongoose to automatically replace the messages field in the conversation document with the actual message documents it references. This is useful for getting the full message details instead of just their IDs.
         .populate("messages")
+        //.sort({ updatedAt: -1 }) sorts the results by the updatedAt field in descending order, meaning the most recently updated conversation will be returned first.
         .sort({ updatedAt: -1 });
 
       socket.emit("message", getConversationMessage?.messages || []);
@@ -128,7 +140,6 @@ io.on("connection", async (socket) => {
           $push: { messages: saveMessage?._id },
         }
       );
-
       const getConversationMessage = await ConversationModel.findOne({
         $or: [
           { sender: data?.sender, receiver: data?.receiver },
@@ -161,10 +172,19 @@ io.on("connection", async (socket) => {
     socket.on("sidebar", async (currentUserId) => {
       console.log("current user", currentUserId);
 
-      const conversation = await getConversation(currentUserId);
-      //when the sidebar firstime mounts this event ("conversation event") is emitted to the client at the same time it listen to it. what this does is
+      // const conversation = await getConversation(currentUserId);
+      // when the sidebar firstime mounts this event ("conversation event") is emitted to the client at the same time it listen to it. what this does is
 
-      socket.emit("conversation", conversation);
+      // socket.emit("conversation", conversation);
+      try {
+        console.log("Sidebar event received for user:", currentUserId);
+        const conversation = await getConversation(currentUserId);
+        console.log(conversation);
+        socket.emit("conversation", conversation);
+      } catch (error) {
+        console.error("Error handling sidebar event:", error);
+        socket.emit("error", { message: "Failed to handle sidebar event" });
+      }
     });
 
     socket.on("seen", async (msgByUserId) => {
@@ -193,7 +213,7 @@ io.on("connection", async (socket) => {
     //disconnect
     socket.on("disconnect", () => {
       onlineUser.delete(user?._id?.toString());
-      console.log("User Disconnected ", socket.id);
+      console.log("User Disconnected the socket id is ======= ", socket.id);
     });
   }
 });

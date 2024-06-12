@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -49,6 +49,7 @@ const CheckEmailPage = () => {
 
     try {
       const response = await axios.post(URL, data);
+      console.log(response);
       setLoading(false);
       toast.success(response.data.message);
 
@@ -101,7 +102,7 @@ const CheckEmailPage = () => {
           {/* spinner component */}
 
           <button className="bg-primary text-lg px-4 py-1 hover:bg-secondary rounded mt-2 font-bold text-white leading-relaxed tracking-wide">
-            Let's Go
+            Lets Go
           </button>
         </form>
 

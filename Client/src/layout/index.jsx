@@ -1,4 +1,5 @@
-import React from "react";
+/* eslint-disable react/prop-types */
+
 import logo from "../assets/logo.png";
 
 const AuthLayouts = ({ children }) => {

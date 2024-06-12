@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useRef, useState } from "react";
 import Avatar from "./Avatar";
 import uploadFile from "../helpers/uploadFile";

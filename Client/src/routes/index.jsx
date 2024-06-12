@@ -47,7 +47,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "resetpassword/:resetToken", // Correct spelling
+        path: "resetpassword/:resetToken",
         element: (
           <AuthLayouts>
             <ResetPassword />

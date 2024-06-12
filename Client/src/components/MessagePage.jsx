@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import Avatar from "./Avatar";
@@ -9,7 +9,8 @@ import { FaImage } from "react-icons/fa6";
 import { FaVideo } from "react-icons/fa6";
 import uploadFile from "../helpers/uploadFile";
 import { IoClose } from "react-icons/io5";
-import Loading from "./Loading";
+//import Loading from "./Loading";
+import { DotLoader } from "react-spinners";
 import backgroundImage from "../assets/wallapaper.jpeg";
 import { IoMdSend } from "react-icons/io";
 import moment from "moment";
@@ -106,14 +107,18 @@ const MessagePage = () => {
 
   useEffect(() => {
     if (socketConnection) {
+      //this event gets the current user details
       socketConnection.emit("message-page", params.userId);
 
       socketConnection.emit("seen", params.userId);
 
+      //message-user return details of the like _id, name email profile pic except the password and in the front end part the returned value  is set to the data variable, which then could be used in this component to dipslay user data on screen
       socketConnection.on("message-user", (data) => {
+        console.log("Received 'message-user' with data:", data);
         setDataUser(data);
       });
 
+      //listen to the message event from the server
       socketConnection.on("message", (data) => {
         console.log("message data", data);
         setAllMessage(data);
@@ -122,7 +127,7 @@ const MessagePage = () => {
   }, [socketConnection, params?.userId, user]);
 
   const handleOnChange = (e) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
 
     setMessage((preve) => {
       return {
@@ -204,9 +209,10 @@ const MessagePage = () => {
       <section className="h-[calc(100vh-128px)] overflow-x-hidden overflow-y-scroll scrollbar relative bg-slate-200 bg-opacity-50">
         {/**all message show here */}
         <div className="flex flex-col gap-2 py-2 mx-2" ref={currentMessage}>
-          {allMessage.map((msg, index) => {
+          {allMessage.map((msg) => {
             return (
               <div
+                key={msg._id}
                 className={` p-1 py-1 rounded w-fit max-w-[280px] md:max-w-sm lg:max-w-md ${
                   user._id === msg?.msgByUserId
                     ? "ml-auto bg-teal-100"
@@ -241,10 +247,10 @@ const MessagePage = () => {
         {message.imageUrl && (
           <div className="w-full h-full sticky bottom-0 bg-slate-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden">
             <div
-              className="w-fit p-2 absolute top-0 right-0 cursor-pointer hover:text-red-600"
+              className="w-fit p-2 absolute top-0 right-0 cursor-pointer hover:text-red-600 "
               onClick={handleClearUploadImage}
             >
-              <IoClose size={30} />
+              <IoClose size={40} />
             </div>
             <div className="bg-white p-3">
               <img
@@ -279,7 +285,7 @@ const MessagePage = () => {
 
         {loading && (
           <div className="w-full h-full flex sticky bottom-0 justify-center items-center">
-            <Loading />
+            <DotLoader className="" color="#00adb5" size={50} />
           </div>
         )}
       </section>
@@ -289,8 +295,9 @@ const MessagePage = () => {
         <div className="relative ">
           <button
             onClick={handleUploadImageVideoOpen}
-            className="flex justify-center items-center w-11 h-11 rounded-full hover:bg-primary hover:text-white"
+            className="flex justify-center items-center w-11 h-11 rounded-full text-primary hover:bg-primary hover:text-white"
           >
+            {/* the plus icon to send image or video that is found at the bottom of the message page */}
             <FaPlus size={20} />
           </button>
 

@@ -23,6 +23,7 @@ export const userSlice = createSlice({
     setToken: (state, action) => {
       state.token = action.payload;
     },
+    // eslint-disable-next-line no-unused-vars
     logout: (state, action) => {
       state._id = "";
       state.name = "";

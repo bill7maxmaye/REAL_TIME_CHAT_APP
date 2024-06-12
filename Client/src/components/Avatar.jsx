@@ -1,4 +1,5 @@
-import React from "react";
+/* eslint-disable react/prop-types */
+
 import { PiUserCircle } from "react-icons/pi";
 import { useSelector } from "react-redux";
 
