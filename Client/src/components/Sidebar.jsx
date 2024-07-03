@@ -33,16 +33,17 @@ const Sidebar = () => {
 
   useEffect(() => {
     if (socketConnection) {
-      console.log(user);
+      //console.log(user);
       socketConnection.emit("sidebar", user._id);
       socketConnection.on("error", (error) => {
         console.error("Socket error:", error);
       });
 
       socketConnection.on("conversation", (data) => {
-        console.log("conversations", data);
+        //console.log("conversations", data);
 
         const conversationUserData = data.map((conversationUser) => {
+          //console.log(conversationUser);
           if (
             conversationUser?.sender?._id === conversationUser?.receiver?._id
           ) {
@@ -62,9 +63,9 @@ const Sidebar = () => {
             };
           }
         });
-        console.log(conversationUserData);
+        //console.log(conversationUserData);
         setAllUser(conversationUserData);
-        console.log(allUser);
+        //console.log(allUser);
       });
     }
   }, [socketConnection, user]);
