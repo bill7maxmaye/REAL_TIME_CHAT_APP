@@ -25,8 +25,8 @@ const PORT = process.env.PORT || 8000;
 // });
 
 //define your api endpoints here
-app.use("/api", router);
 
+app.use("/api", router);
 //if connected to the mongodb database then start the server
 connectDB().then(() => {
   server.listen(PORT, () => {
