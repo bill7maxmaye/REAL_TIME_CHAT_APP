@@ -17,12 +17,12 @@ app.use(cookiesParser());
 
 const PORT = process.env.PORT || 8000;
 
-// app.get("/", (req, res) => {
-//   res.json({
-//     message: "Hello World",
-//   });
-//   console.log(req);
-// });
+app.get("/", (req, res) => {
+  res.json({
+    message: "Hello World",
+  });
+  console.log(req);
+});
 
 //define your api endpoints here
 
